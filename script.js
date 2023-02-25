@@ -1,29 +1,24 @@
 'use strict';
 
-/*
-console.log(document.querySelector('.message').textContent);
-document.querySelector('.message').textContent = 'Correct Number!';
-
-document.querySelector('.number').textContent = 13;
-document.querySelector('.score').textContent = 10;
-document.querySelector('.guess').value = 23;
-console.log(document.querySelector('.guess').value);
-*/
-
-const secretNumber = Math.trunc(Math.random() * 20);
+let secretNumber = Math.trunc(Math.random() * 20);
 let score = 20;
 let highScore = 0;
 
+const displayMessage = function (message) {
+  document.querySelector('.message').textContent = message;
+};
+
+//Check Event
 document.querySelector('.check').addEventListener('click', function () {
   const guess = Number(document.querySelector('.guess').value);
   console.log(guess, typeof guess);
   //NO INPUT
   if (!guess) {
-    document.querySelector('.message').textContent = 'No Number!';
+    displayMessage('No Number!');
   }
   //WINS
   else if (guess === secretNumber) {
-    document.querySelector('.message').textContent = 'Correct!';
+    displayMessage('Correct!');
     document.querySelector('body').style.backgroundColor = '#60b347';
     document.querySelector('.number').style.width = '30rem';
     document.querySelector('.guess').style.backgroundColor = '#60b347';
@@ -33,30 +28,45 @@ document.querySelector('.check').addEventListener('click', function () {
       document.querySelector('.highscore').textContent = highScore;
     }
   }
+  //Guess Is Wrong
+  else if (guess !== secretNumber) {
+    if (score > 1) {
+      displayMessage(guess > secretNumber ? 'Too High!' : 'Too Low!');
+      score--;
+      document.querySelector('.score').textContent = score;
+    } else {
+      displayMessage('You Lost Game!');
+      document.querySelector('.score').textContent = 0;
+    }
+  }
   //TOO HIGH
-  else if (guess > secretNumber) {
-    if (score > 1) {
-      document.querySelector('.message').textContent = 'Too High!';
-    } else {
-      document.querySelector('.message').textContent = 'You Lost Game!';
-    }
-    score--;
-  }
+  // else if (guess > secretNumber) {
+  //   if (score > 1) {
+  //     document.querySelector('.message').textContent = 'Too High!';
+  //     score--;
+  //     document.querySelector('.score').textContent = score;
+  //   } else {
+  //     document.querySelector('.message').textContent = 'You Lost Game!';
+  //     document.querySelector('.score').textContent = 0;
+  //   }
+  // }
   //TOO LOW
-  else if (guess < secretNumber) {
-    if (score > 1) {
-      document.querySelector('.message').textContent = 'Too Low!';
-    } else {
-      document.querySelector('.message').textContent = 'You Lost Game!';
-    }
-    score--;
-  }
-  document.querySelector('.score').textContent = score;
+  // else if (guess < secretNumber) {
+  //   if (score > 1) {
+  //     document.querySelector('.message').textContent = 'Too Low!';
+  //     score--;
+  //     document.querySelector('.score').textContent = score;
+  //   } else {
+  //     document.querySelector('.message').textContent = 'You Lost Game!';
+  //     document.querySelector('.score').textContent = 0;
+  //   }
+  // }
 });
-
+//Again Event
 document.querySelector('.again').addEventListener('click', function () {
   score = 20;
-  document.querySelector('.message').textContent = 'Start guessing...';
+  secretNumber = Math.trunc(Math.random() * 20);
+  displayMessage('Start guessing...');
   document.querySelector('.score').textContent = score;
   document.querySelector('.number').textContent = '?';
   document.querySelector('.guess').value = '';
